@@ -1,0 +1,10 @@
+server:
+  port: 11923
+spring:
+  application:
+    name: chatting-software-backend
+  datasource:
+    url: jdbc:mysql://localhost:3306/flinktest?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
