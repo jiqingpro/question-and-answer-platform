@@ -13,8 +13,13 @@
 **/gradle/wrapper/gradle-wrapper.jar
 
 # IntelliJ IDEA
-/.idea/
-/*.iml
+**/.idea/
+**/.run/
+**/target/
+**/*.iml
+**/*.txt
+**/node_modules/
+**/package-lock.json
 
 # VS Code
 .vscode/
