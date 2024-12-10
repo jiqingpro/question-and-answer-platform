@@ -11,7 +11,7 @@
 
     <artifactId>user-modules</artifactId> <!-- 这是子模块的 artifactId -->
     <version>0.0.1-SNAPSHOT</version>
-    <name>User-modules</name> <!-- 给子模块一个有意义的名字 -->
+    <name>user-modules</name> <!-- 给子模块一个有意义的名字 -->
     <description>用户模块</description> <!-- 具体描述子模块的功能 -->
 
     <properties>

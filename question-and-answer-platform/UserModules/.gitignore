@@ -1,7 +1,0 @@
-**/.idea/
-**/.run/
-**/target/
-**/*.iml
-**/*.txt
-**/node_modules/
-**/package-lock.json
