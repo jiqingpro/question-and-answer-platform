@@ -62,9 +62,10 @@
 
 <script>
 import axios from "axios";
-import {baseUrl} from "@/config";
+import {baseUrl} from "@/config/config";
 
 export default {
+    name: 'MainPage',
     data() {
         return {
             activeTab: 'recommend', // 当前选中的 Tab
@@ -77,7 +78,7 @@ export default {
     },
     methods: {
         goToMessages() {
-            this.$notify({type: 'info', title: '跳转到消息页面'});
+            this.$message({type: 'info', title: '跳转到消息页面'});
         },
         goToPrivateMessages() {
             this.$notify({type: 'info', title: '跳转到私信页面'});
@@ -91,7 +92,10 @@ export default {
                 localStorage.removeItem('currentPathName');
 
                 // 提示用户退出成功
-                this.$notify({type: 'success', title: '退出成功', message: '您已成功退出登录', duration: 1000,});
+                this.$message({
+                    message: '您已退出登录',
+                    type: 'success'
+                });
 
                 // 跳转到登录页面
                 await this.$router.push('/LoginPage');

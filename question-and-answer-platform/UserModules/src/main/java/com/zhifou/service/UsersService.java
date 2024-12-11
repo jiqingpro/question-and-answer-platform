@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zhifou.entity.Users;
 import com.zhifou.mapper.UsersMapper;
+import com.zhifou.tools.Response;
 import jakarta.annotation.Resource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,6 @@ public class UsersService {
         if (user == null) {
             return false; // 用户不存在
         }
-
         // 2. 校验密码是否正确
         return passwordEncoder.matches(password, user.getPassword()); // 使用密码加密方式进行验证
     }

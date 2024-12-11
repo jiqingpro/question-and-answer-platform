@@ -19,7 +19,6 @@ const router = new VueRouter({
 // 路由守卫
 router.beforeEach((to, from, next) => {
     const isAuthenticated = !!localStorage.getItem('authToken'); // 是否登录
-    debugger
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
     if (to.meta.title) {

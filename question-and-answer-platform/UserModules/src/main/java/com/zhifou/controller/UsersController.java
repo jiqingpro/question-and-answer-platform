@@ -1,9 +1,11 @@
 package com.zhifou.controller;
 
+import com.zhifou.common.AppHttpCodeEnum;
 import com.zhifou.entity.Users;
 import com.zhifou.service.TokenService;
 import com.zhifou.service.UsersService;
 import com.zhifou.tools.LoginResponse;
+import com.zhifou.tools.Response;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,7 @@ public class UsersController {
 
     // 登录接口
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody Users user) {
+    public Response login(@RequestBody Users user) {
         try {
             // 调用业务逻辑服务来验证用户
             boolean isAuthenticated = usersService.authenticate(user.getUsername(), user.getPassword());
@@ -29,14 +31,14 @@ public class UsersController {
             if (isAuthenticated) {
                 // 登录成功，返回 token 或其他信息
                 String token = tokenService.generateToken(user.getUsername());
-                return new LoginResponse(true, "登录成功", token);
+                return Response.success("登录成功",token);
             } else {
-                // 登录失败
-                return new LoginResponse(false, "用户名或密码错误", null);
+                // 登录失败'
+                return Response.error(500,"登录失败");
             }
         }catch (Exception e){
             e.printStackTrace();
-            return new LoginResponse(false, "程序错误", null);
+            return  Response.error(500, "程序错误", e.getMessage());
         }
 
     }

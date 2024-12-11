@@ -1,6 +1,6 @@
-import LoginPage from '../components/main/LoginPage.vue';
-import MainPage from '../components/main/MainPage.vue';
-import RegisterPage from "@/components/main/RegisterPage.vue";
+import LoginPage from '@/views/main/LoginPage.vue';
+import MainPage from '@/views/main/MainPage.vue';
+import RegisterPage from "@/views/main/RegisterPage.vue";
 
 export default [
     {

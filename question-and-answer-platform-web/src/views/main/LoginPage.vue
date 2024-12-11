@@ -41,9 +41,7 @@
 </template>
 
 <script>
-// 引入 axios
-import axios from 'axios';
-import {baseUrl} from "@/config";
+import { post } from '@/utils/request'; // 使用封装的 POST 方法
 
 export default {
     name: 'LoginPage',
@@ -59,6 +57,7 @@ export default {
     methods: {
         // 登录函数
         async login() {
+
             this.errorMessage = ''; // 清空之前的错误信息
 
             // 表单验证
@@ -66,24 +65,35 @@ export default {
                 this.errorMessage = '用户名和密码不能为空';
                 return;
             }
-
             try {
+                debugger
                 // 发送登录请求
-                const response = await axios.post(baseUrl + '/api/users/login', this.user);
-
+                const response = await post('/api/users/login', this.user);
                 // 检查登录成功的响应
-                const {token, message} = response.data;
-                if (token) {
+
+                const { code, message, data } = response;
+                console.log(response);
+                if (code === 200 && data) {
+                    console.log('Attempting to navigate to MainPage');
+
                     // 将 token 存储到 localStorage
-                    localStorage.setItem('authToken', token);
-                    this.$notify({type: 'success', title: '登录成功'});
+                    localStorage.setItem('authToken', data);
+                    const token = localStorage.getItem('authToken');
+                    console.log('Token:', token); // 确认 token 是否正确存储
+
+                    this.$message({
+                        message: '登录成功',
+                        type: 'success'
+                    });
+
                     // 跳转到主页
-                    await this.$router.push({name: 'MainPage'});
+                    await this.$router.push({ name: 'MainPage' });
                 } else {
-                    // 如果没有返回 token，则显示服务器消息
+                    // 如果 success 为 false，则显示服务器消息
                     this.errorMessage = message || '登录失败，请重试';
                 }
             } catch (error) {
+                console.error('Login error:', error);
                 // 捕获请求错误并区分错误类型
                 if (error.response) {
                     // 后端返回的错误
@@ -97,11 +107,11 @@ export default {
         },
         // 忘记密码逻辑（可以跳转或展示提示）
         onForgotPassword() {
-            this.$notify({type: 'info', title: '请联系管理员找回密码'});
+            this.$message('请联系管理员找回密码');
         },
         // 跳转到注册页面
         onRegister() {
-            this.$router.push({name: 'RegisterPage'});
+            this.$router.push({ name: 'RegisterPage' });
         },
     },
 };

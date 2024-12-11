@@ -1,9 +1,10 @@
 import axios from 'axios';
-import router from './router'; // 引入你的路由配置
+import router from '../router'; // 引入你的路由配置
+import {baseUrl} from "@/config/config";
 
 // 创建Axios实例
 const instance = axios.create({
-    baseURL: 'http://localhost:11923/api', // 替换为你的后端API地址
+    baseURL: baseUrl, // 替换为你的后端API地址
     timeout: 5000, // 超时时间
 });
 

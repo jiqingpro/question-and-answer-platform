@@ -66,7 +66,7 @@
 
 <script>
 import axios from "axios";
-import {baseUrl} from "@/config";
+import {baseUrl} from "@/config/config";
 
 export default {
     name: "RegisterPage",
