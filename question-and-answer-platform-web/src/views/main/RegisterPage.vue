@@ -65,8 +65,7 @@
 </template>
 
 <script>
-import axios from "axios";
-import {baseUrl} from "@/config/config";
+import {post} from '@/utils/request'; // 使用封装的 POST 方法
 
 export default {
     name: "RegisterPage",
@@ -84,7 +83,11 @@ export default {
     methods: {
         // 注册逻辑
         async register() {
-            this.message = ""; // 清空提示信息
+            // 清空提示信息
+            this.message = "";
+            this.messageType = "";
+
+            // 表单校验
             if (!this.username || !this.email || !this.password || !this.confirmPassword) {
                 this.message = "请完整填写所有字段";
                 this.messageType = "error";
@@ -97,31 +100,46 @@ export default {
                 return;
             }
 
-            this.isRegistering = true; // 设置注册中状态
+            // 设置注册中状态
+            this.isRegistering = true;
+
             try {
-                const response = await axios.post(baseUrl + "/api/users/register", {
+                // 调用注册接口
+                const { code, message, data } = await post("/api/users/register", {
                     username: this.username,
                     email: this.email,
                     password: this.password,
-
                 });
 
-                if (response.data.success) {
+                // 成功逻辑处理
+                if (code === 200 && data) {
                     this.message = "注册成功，请前往登录";
                     this.messageType = "success";
-                    setTimeout(() => this.$router.push({name: "LoginPage"}), 2000); // 两秒后跳转到登录页面
+                    setTimeout(() => this.$router.push({ name: "LoginPage" }), 2000); // 两秒后跳转到登录页面
                 } else {
-                    this.message = response.data.message || "注册失败，请重试";
+                    // 根据后端返回的消息展示错误
+                    this.message = message || "注册失败，请重试";
                     this.messageType = "error";
                 }
             } catch (error) {
-                this.message = "网络错误，请稍后重试";
-                this.messageType = "error";
+                // 捕获错误并区分类型
                 console.error("Register error:", error);
+
+                if (error.response) {
+                    // 后端返回的错误
+                    this.message = error.response.data.message || "注册失败，请重试";
+                } else {
+                    // 网络或其他错误
+                    this.message = "网络错误，请稍后重试";
+                }
+
+                this.messageType = "error";
             } finally {
+                // 重置注册状态
                 this.isRegistering = false;
             }
         },
+
         // 返回登录页面
         goToLogin() {
             this.$router.push({name: "LoginPage"});

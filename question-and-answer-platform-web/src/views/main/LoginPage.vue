@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { post } from '@/utils/request'; // 使用封装的 POST 方法
+import { post } from '@/utils/request';
 
 export default {
     name: 'LoginPage',
@@ -57,7 +57,6 @@ export default {
     methods: {
         // 登录函数
         async login() {
-
             this.errorMessage = ''; // 清空之前的错误信息
 
             // 表单验证
@@ -66,20 +65,16 @@ export default {
                 return;
             }
             try {
-                debugger
                 // 发送登录请求
                 const response = await post('/api/users/login', this.user);
-                // 检查登录成功的响应
 
-                const { code, message, data } = response;
-                console.log(response);
+                // 直接检查响应的 code 和 message
+                const { code, data, message } = response;
+
                 if (code === 200 && data) {
-                    console.log('Attempting to navigate to MainPage');
 
                     // 将 token 存储到 localStorage
                     localStorage.setItem('authToken', data);
-                    const token = localStorage.getItem('authToken');
-                    console.log('Token:', token); // 确认 token 是否正确存储
 
                     this.$message({
                         message: '登录成功',
@@ -105,6 +100,7 @@ export default {
                 console.error('Login error:', error);
             }
         },
+
         // 忘记密码逻辑（可以跳转或展示提示）
         onForgotPassword() {
             this.$message('请联系管理员找回密码');

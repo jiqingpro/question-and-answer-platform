@@ -2,18 +2,21 @@ package com.zhifou.controller;
 
 import com.zhifou.common.AppHttpCodeEnum;
 import com.zhifou.entity.Users;
+import com.zhifou.exception.SystemException;
 import com.zhifou.service.TokenService;
 import com.zhifou.service.UsersService;
-import com.zhifou.tools.LoginResponse;
 import com.zhifou.tools.Response;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
 public class UsersController {
+    private static final Logger log = LoggerFactory.getLogger(UsersController.class);
     @Resource
     private UsersService usersService;
 
@@ -34,28 +37,43 @@ public class UsersController {
                 return Response.success("登录成功",token);
             } else {
                 // 登录失败'
-                return Response.error(500,"登录失败");
+                return Response.error(AppHttpCodeEnum.SYSTEM_ERROR.getCode(), "登录失败");
             }
-        }catch (Exception e){
-            e.printStackTrace();
-            return  Response.error(500, "程序错误", e.getMessage());
+        }catch (SystemException e) {
+            log.error("登录异常: {}", e.getMessage());
+            return Response.error(e.getCode(), e.getMsg());
+
+        } catch (Exception e){
+            log.error(e.getMessage());
+            return  Response.error(AppHttpCodeEnum.SYSTEM_ERROR.getCode(), "程序错误", e.getMessage());
         }
 
     }
 
     @PostMapping("/register")
-    public LoginResponse register(@RequestBody Users user) {
+    public Response register(@RequestBody Users user) {
         try {
             String encryptedPassword = usersService.encryptPassword(user.getPassword());
+
             // 保存用户到数据库
             usersService.saveNewUser(user, encryptedPassword);
+
+            // 生成Token
             String token = tokenService.generateToken(user.getUsername());
-            return new LoginResponse(true, "注册成功", token);
+
+            return Response.success("注册成功", token);
+
+        } catch (SystemException e) {
+            log.error("注册异常: {}", e.getMessage());
+            return Response.error(e.getCode(), e.getMsg());
+
         } catch (Exception e) {
-            e.printStackTrace();
-            return new LoginResponse(false, "注册失败", null);
+            // 处理其他异常
+            log.error("Unexpected error: {}", e.getMessage(), e);
+            return Response.error(AppHttpCodeEnum.SYSTEM_ERROR.getCode(), "系统错误，请稍后再试");
         }
     }
+
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
