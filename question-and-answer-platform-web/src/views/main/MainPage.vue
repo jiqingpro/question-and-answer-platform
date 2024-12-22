@@ -18,19 +18,38 @@
                     >
                         关注
                     </el-button>
+                    <el-button
+                        :class="activeTab === 'hotList' ? 'active-tab' : ''"
+                        type="text"
+                        @click="activeTab = 'hotList'"
+                    >
+                        热榜
+                    </el-button>
                 </div>
             </div>
 
             <div class="header-right">
-                <el-button @click="goToMessages" type="text">消息</el-button>
-                <el-button @click="goToPrivateMessages" type="text">私信</el-button>
-                <el-dropdown trigger="hover" class="author-dropdown">
-                      <span class="el-dropdown-link">
-                        作者 <i class="el-icon-arrow-down el-icon--right"></i>
-                      </span>
+                <el-input
+                    v-model="searchQuery"
+                    placeholder="搜索或提问"
+                    class="search-input"
+                    clearable
+                >
+                    <el-button slot="append" @click="handleSearch" class="search-button">
+                        搜索
+                    </el-button>
+                </el-input>
+                
+                <!-- New buttons for 消息 and 私信 -->
+                <el-button type="text" icon="el-icon-bell" class="icon-button">消息</el-button>
+                <el-button type="text" icon="el-icon-message" class="icon-button">私信</el-button>
+                
+                <el-dropdown trigger="click" class="author-dropdown">
+                    <img src="https://via.placeholder.com/40" alt="头像" class="author-avatar" />
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item>个人主页</el-dropdown-item>
-                        <el-dropdown-item @click.native ="logout">退出登录</el-dropdown-item>
+                        <el-dropdown-item>设置</el-dropdown-item>
+                        <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
@@ -39,23 +58,9 @@
         <!-- 主内容区 -->
         <el-container>
             <el-main>
-                <div v-if="activeTab === 'recommend'" class="content">推荐内容</div>
-                <div v-if="activeTab === 'following'" class="content">关注内容</div>
+                <component :is="currentComponent"></component>
             </el-main>
 
-            <!-- 侧边栏 -->
-            <!--            <el-aside width="300px" class="right-aside">
-                            <div class="aside-section">
-                                <h3>推荐作者</h3>
-                                <div v-for="author in recommendedAuthors" :key="author.id" class="author-item">
-                                    <img :src="author.avatar" alt="头像" class="author-avatar" />
-                                    <div>
-                                        <p class="author-name">{{ author.name }}</p>
-                                        <p class="author-description">{{ author.description }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </el-aside>-->
         </el-container>
     </div>
 </template>
@@ -63,26 +68,29 @@
 <script>
 import axios from "axios";
 import {baseUrl} from "@/config/config";
+import RecommendComponent from '@/components/recommend/RecommendComponent.vue';
+import FollowingComponent from '@/components/following/FollowingComponent.vue';
+import HotComponent from '@/components/hotList/HotComponent.vue';
 
 export default {
     name: 'MainPage',
     data() {
         return {
-            activeTab: 'recommend', // 当前选中的 Tab
-            recommendedAuthors: [
-                {id: 1, name: '作者A', avatar: 'https://via.placeholder.com/40', description: '关注领域：科技'},
-                {id: 2, name: '作者B', avatar: 'https://via.placeholder.com/40', description: '关注领域：文学'},
-                {id: 3, name: '作者C', avatar: 'https://via.placeholder.com/40', description: '关注领域：电影'},
-            ],
+            activeTab: 'recommend',
+            tabComponents: {
+                recommend: 'RecommendComponent',
+                following: 'FollowingComponent',
+                hotList: 'HotComponent'
+            },
+            searchQuery: '',
         };
     },
+    computed: {
+        currentComponent() {
+            return this.tabComponents[this.activeTab];
+        }
+    },
     methods: {
-        goToMessages() {
-            this.$message({type: 'info', title: '跳转到消息页面'});
-        },
-        goToPrivateMessages() {
-            this.$notify({type: 'info', title: '跳转到私信页面'});
-        },
         async logout() {
             try {
                 // 调用后端退出登录接口
@@ -105,6 +113,18 @@ export default {
                 this.$notify({type: 'error', title: '退出失败', message: '无法退出登录，请稍后重试', duration: 2000,});
             }
         },
+        handleSearch() {
+            if (this.searchQuery.trim()) {
+                // Implement search logic here
+                console.log('Searching for:', this.searchQuery);
+                // You can route to a search results page or perform an API call
+            }
+        }
+    },
+    components: {
+        RecommendComponent,
+        FollowingComponent,
+        HotComponent
     },
 };
 </script>
@@ -144,7 +164,7 @@ export default {
 .el-button.active-tab {
     color: #409eff; /* 激活状态颜色 */
     font-weight: bold;
-    border-bottom: 2px solid #409eff; /* 激活状态的下划线 */
+    border-bottom: 2px solid #409eff; /* 激活状态的下线 */
     border-radius: 0;
 }
 
@@ -193,5 +213,35 @@ export default {
 .author-description {
     font-size: 0.9em;
     color: #666;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    width: 300px;
+    margin-right: 10px;
+}
+
+.search-button {
+    background-color: #409eff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background-color: #66b1ff;
+}
+
+.icon-button {
+    margin-right: 10px;
+    color: #606266;
+}
+
+.icon-button:hover {
+    color: #409eff;
 }
 </style>
