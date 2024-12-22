@@ -39,4 +39,10 @@ public class TokenService {
                 .getBody();
         return claims.getSubject(); // 获取载荷中的用户名
     }
+
+
+    public void invalidateToken(String token) {
+
+
+    }
 }
