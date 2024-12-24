@@ -1,6 +1,7 @@
 import LoginPage from '@/views/auth/LoginPage.vue';
 import MainPage from '@/views/main/MainPage.vue';
 import RegisterPage from "@/views/auth/RegisterPage.vue";
+import personalHome from "@/views/auth/personalHome.vue";
 
 export default [
     {
@@ -20,5 +21,10 @@ export default [
         name: 'RegisterPage',
         component: RegisterPage,
         meta: { title: '注册页面' },
+    },
+    {
+        path: '/personalHome',
+        name: 'personalHome',
+        component: personalHome,
     },
 ];

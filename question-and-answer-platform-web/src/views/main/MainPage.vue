@@ -31,23 +31,25 @@
             <div class="header-right">
                 <el-input
                     v-model="searchQuery"
-                    placeholder="搜索或提问"
+                    placeholder="搜索"
                     class="search-input"
                     clearable
                 >
-                    <el-button slot="append" @click="handleSearch" class="search-button">
-                        搜索
-                    </el-button>
+                    <el-button slot="append" icon="el-icon-search"></el-button>
                 </el-input>
-                
+
+                <el-button slot="append" @click="handleSearch" class="search-button">
+                    提问
+                </el-button>
+
                 <!-- New buttons for 消息 and 私信 -->
                 <el-button type="text" icon="el-icon-bell" class="icon-button">消息</el-button>
                 <el-button type="text" icon="el-icon-message" class="icon-button">私信</el-button>
-                
+
                 <el-dropdown trigger="click" class="author-dropdown">
-                    <img src="https://via.placeholder.com/40" alt="头像" class="author-avatar" />
+                    <img src="https://via.placeholder.com/40" alt="头像" class="author-avatar"/>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>个人主页</el-dropdown-item>
+                        <el-dropdown-item @click.native="goToPersonalHome">个人主页</el-dropdown-item>
                         <el-dropdown-item>设置</el-dropdown-item>
                         <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
@@ -74,6 +76,11 @@ import HotComponent from '@/components/hotList/HotComponent.vue';
 
 export default {
     name: 'MainPage',
+    components: {
+        RecommendComponent,
+        FollowingComponent,
+        HotComponent
+    },
     data() {
         return {
             activeTab: 'recommend',
@@ -119,13 +126,12 @@ export default {
                 console.log('Searching for:', this.searchQuery);
                 // You can route to a search results page or perform an API call
             }
+        },
+        goToPersonalHome() {
+            this.$router.push({ name: 'personalHome' });
         }
     },
-    components: {
-        RecommendComponent,
-        FollowingComponent,
-        HotComponent
-    },
+
 };
 </script>
 
@@ -230,6 +236,8 @@ export default {
     color: white;
     border: none;
     cursor: pointer;
+    margin-right: 30px;
+
 }
 
 .search-button:hover {
