@@ -38,7 +38,7 @@
                     <el-button slot="append" icon="el-icon-search"></el-button>
                 </el-input>
 
-                <el-button slot="append" @click="handleSearch" class="search-button">
+                <el-button slot="append" @click="openQuestionDialog" class="search-button">
                     提问
                 </el-button>
 
@@ -62,8 +62,12 @@
             <el-main>
                 <component :is="currentComponent"></component>
             </el-main>
-
         </el-container>
+
+        <!-- 提问弹框 -->
+        <el-dialog title="写下你的问题" :visible.sync="questionDialogVisible" @open="disableScroll" @close="enableScroll">
+            <AskQuestion :visible.sync="questionDialogVisible" />
+        </el-dialog>
     </div>
 </template>
 
@@ -73,13 +77,17 @@ import {baseUrl} from "@/config/config";
 import RecommendComponent from '@/components/recommend/RecommendComponent.vue';
 import FollowingComponent from '@/components/following/FollowingComponent.vue';
 import HotComponent from '@/components/hotList/HotComponent.vue';
+import PersonalHome from '@/views/auth/personalHome.vue';
+import AskQuestion from '@/components/AskQuestion/AskQuestion.vue';
 
 export default {
     name: 'MainPage',
     components: {
         RecommendComponent,
         FollowingComponent,
-        HotComponent
+        HotComponent,
+        PersonalHome,
+        AskQuestion
     },
     data() {
         return {
@@ -87,9 +95,11 @@ export default {
             tabComponents: {
                 recommend: 'RecommendComponent',
                 following: 'FollowingComponent',
-                hotList: 'HotComponent'
+                hotList: 'HotComponent',
+                personalHome: 'PersonalHome'
             },
             searchQuery: '',
+            questionDialogVisible: false
         };
     },
     computed: {
@@ -128,10 +138,18 @@ export default {
             }
         },
         goToPersonalHome() {
-            this.$router.push({ name: 'personalHome' });
+            this.activeTab = 'personalHome';
+        },
+        openQuestionDialog() {
+            this.questionDialogVisible = true;
+        },
+        disableScroll() {
+            document.body.style.overflow = 'hidden';
+        },
+        enableScroll() {
+            document.body.style.overflow = '';
         }
     },
-
 };
 </script>
 
@@ -140,6 +158,7 @@ export default {
     height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .main-header {
@@ -152,28 +171,27 @@ export default {
 
 .header-left {
     display: flex;
-    justify-content: center; /* 将内容居中 */
+    justify-content: center;
     align-items: center;
-    flex: 1; /* 占据剩余空间 */
+    flex: 1;
 }
 
 .tab-buttons {
     display: flex;
-    gap: 20px; /* 按钮之间的间距 */
+    gap: 20px;
 }
 
 .el-button {
     font-size: 16px;
-    color: #606266; /* 默认字体颜色 */
+    color: #606266;
 }
 
 .el-button.active-tab {
-    color: #409eff; /* 激活状态颜色 */
+    color: #409eff;
     font-weight: bold;
-    border-bottom: 2px solid #409eff; /* 激活状态的下线 */
+    border-bottom: 2px solid #409eff;
     border-radius: 0;
 }
-
 
 .header-right {
     display: flex;
@@ -188,6 +206,12 @@ export default {
     padding: 20px;
     background-color: #f2f2f2;
     min-height: 500px;
+    overflow: hidden;
+}
+
+.el-main {
+    flex: 1;
+    overflow: hidden;
 }
 
 .right-aside {
@@ -237,7 +261,6 @@ export default {
     border: none;
     cursor: pointer;
     margin-right: 30px;
-
 }
 
 .search-button:hover {
