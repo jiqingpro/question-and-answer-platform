@@ -1,6 +1,8 @@
 package com.zhifou.controller;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.zhifou.common.AppHttpCodeEnum;
+import com.zhifou.entity.LoginResponse;
 import com.zhifou.entity.Users;
 import com.zhifou.exception.SystemException;
 import com.zhifou.service.TokenService;
@@ -25,30 +27,28 @@ public class UsersController {
     private TokenService tokenService;
 
 
-    // 登录接口
     @PostMapping("/login")
     public Response login(@Valid @RequestBody Users user) {
         try {
             // 调用业务逻辑服务来验证用户
-            boolean isAuthenticated = usersService.authenticate(user.getUsername(), user.getPassword());
+            Users userRes = usersService.authenticate(user.getUsername(), user.getPassword());
 
-            if (isAuthenticated) {
-                // 登录成功，返回 token 或其他信息
+            if (userRes != null) {
+                // 登录成功，返回 token 和用户信息
                 String token = tokenService.generateToken(user.getUsername());
-                return Response.success("登录成功",token);
+                LoginResponse loginResponse = new LoginResponse(token, userRes.getUserId());
+                return Response.success("登录成功", loginResponse);
             } else {
-                // 登录失败'
+                // 登录失败
                 return Response.error(AppHttpCodeEnum.SYSTEM_ERROR.getCode(), "登录失败");
             }
-        }catch (SystemException e) {
+        } catch (SystemException e) {
             log.error("登录异常: {}", e.getMessage());
             return Response.error(e.getCode(), e.getMsg());
-
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
-            return  Response.error(AppHttpCodeEnum.SYSTEM_ERROR.getCode(), "程序错误", e.getMessage());
+            return Response.error(AppHttpCodeEnum.SYSTEM_ERROR.getCode(), "程序错误", e.getMessage());
         }
-
     }
 
     @PostMapping("/register")

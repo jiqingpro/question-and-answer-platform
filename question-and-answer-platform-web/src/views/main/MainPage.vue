@@ -25,6 +25,13 @@
                     >
                         热榜
                     </el-button>
+                    <el-button
+                        :class="activeTab === 'questions' ? 'active-tab' : ''"
+                        type="text"
+                        @click="activeTab = 'questions'"
+                    >
+                        等你来答
+                    </el-button>
                 </div>
             </div>
 
@@ -79,6 +86,7 @@ import FollowingComponent from '@/components/following/FollowingComponent.vue';
 import HotComponent from '@/components/hotList/HotComponent.vue';
 import PersonalHome from '@/views/auth/personalHome.vue';
 import AskQuestion from '@/components/AskQuestion/AskQuestion.vue';
+import questionsTab from '@/components/questionsTab/questionsTab.vue';
 
 export default {
     name: 'MainPage',
@@ -87,7 +95,9 @@ export default {
         FollowingComponent,
         HotComponent,
         PersonalHome,
-        AskQuestion
+        AskQuestion,
+        questionsTab,
+
     },
     data() {
         return {
@@ -96,7 +106,8 @@ export default {
                 recommend: 'RecommendComponent',
                 following: 'FollowingComponent',
                 hotList: 'HotComponent',
-                personalHome: 'PersonalHome'
+                personalHome: 'PersonalHome',
+                questions: 'questionsTab'
             },
             searchQuery: '',
             questionDialogVisible: false

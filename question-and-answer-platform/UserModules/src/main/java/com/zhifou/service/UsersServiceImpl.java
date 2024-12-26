@@ -26,7 +26,7 @@ public class UsersServiceImpl implements UsersService {
     }
 
 
-    public boolean authenticate(String username, String password) {
+    public Users authenticate(String username, String password) {
         // 1. 从数据库中查询用户
         QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
         Users user = usersMapper.selectOne(queryWrapper.eq("username", username));
@@ -37,7 +37,7 @@ public class UsersServiceImpl implements UsersService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new SystemException(AppHttpCodeEnum.PASSWORD_ERROR);
         }
-        return true;
+        return user;
     }
 
     public String encryptPassword(String password) {

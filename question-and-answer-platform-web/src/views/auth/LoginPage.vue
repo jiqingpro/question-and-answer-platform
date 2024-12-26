@@ -126,16 +126,18 @@ export default {
                 const response = await post('/api/users/login', this.user);
                 const {code, data, message} = response;
                 if (code === 200 && data) {
-                    localStorage.setItem('authToken', data);
+                    localStorage.setItem('authToken', data.token);
                     if (this.rememberMe) {
                         localStorage.setItem('username', this.user.username);
                         localStorage.setItem('password', this.user.password);
                         localStorage.setItem('rememberMe', 'true');
+                        localStorage.setItem('userId', data.userId);
                     } else {
                         sessionStorage.setItem('authToken', data);
                         localStorage.removeItem('username');
                         localStorage.removeItem('password');
                         localStorage.removeItem('rememberMe');
+                        localStorage.setItem('userId', data.userId);
                     }
                     this.$message({
                         message: '登录成功',

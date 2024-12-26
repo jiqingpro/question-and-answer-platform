@@ -3,6 +3,8 @@ package com.zhifou.service;
 import com.zhifou.entity.Questions;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author Xzj
  * @file QuestionsServise
@@ -20,10 +22,5 @@ public interface QuestionsServise {
     Questions createQuestion(Questions question);
 
 
-
-
-
-
-
-
+    List<Questions> getNewQuestions();
 }

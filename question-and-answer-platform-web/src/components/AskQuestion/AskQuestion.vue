@@ -1,19 +1,22 @@
 <template>
     <div>
-        <el-input
-            v-model="questionTitle"
-            placeholder="请输入问题标题"
-            maxlength="100"
-            show-word-limit
-            class="title-input"
-        ></el-input>
-        <el-input
-            type="textarea"
-            v-model="questionContent"
-            placeholder="请输入问题内容"
-            rows="4"
-            class="content-input"
-        ></el-input>
+        <div class="header">
+            <img src="https://via.placeholder.com/40" alt="头像" class="author-avatar"/>
+            <input
+                v-model="questionTitle"
+                placeholder="请输入问题标题"
+                maxlength="100"
+                class="title-input-field"
+            />
+        </div>
+        <div class="content-input">
+            <textarea
+                v-model="questionContent"
+                placeholder="请输入问题内容 (支持 Markdown)"
+                rows="4"
+                class="content-input-field"
+            ></textarea>
+        </div>
         <div class="dialog-footer">
             <el-button @click="closeDialog">取消</el-button>
             <el-button type="primary" @click="submitQuestion">发布问题</el-button>
@@ -71,32 +74,45 @@ export default {
 </script>
 
 <style scoped>
-.title-input {
-    margin-bottom: 20px;
+.header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #dcdfe6;
+    padding-bottom: 10px;
 }
 
-.title-input .el-input__inner {
+.author-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.title-input-field {
+    flex: 1;
     border: none;
-    border-bottom: 2px solid #dcdfe6;
     font-size: 20px;
     font-weight: bold;
-    padding: 10px 0;
+    outline: none;
 }
 
-.title-input .el-input__inner:focus {
+.title-input-field:focus {
     border-bottom-color: #409eff;
-    box-shadow: none;
 }
 
-.content-input .el-input__inner {
+.content-input-field {
+    width: 100%;
     border: none;
     border-radius: 4px;
     background-color: #f5f5f5;
     padding: 10px;
+    outline: none;
+    resize: vertical;
+    font-family: inherit;
 }
 
-.content-input .el-input__inner:focus {
-    border: none;
+.content-input-field:focus {
     box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
 }
 

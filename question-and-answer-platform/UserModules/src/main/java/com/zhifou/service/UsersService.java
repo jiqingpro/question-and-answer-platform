@@ -13,7 +13,7 @@ public interface UsersService {
      * @param password 密码
      * @return 是否验证通过
      */
-    boolean authenticate(String username, String password);
+    Users authenticate(String username, String password);
 
     /**
      * 加密密码

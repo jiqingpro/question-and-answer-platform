@@ -5,10 +5,7 @@ import com.zhifou.service.QuestionsServise;
 import com.zhifou.tools.Response;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Xzj
@@ -29,6 +26,16 @@ public class QuestionsController {
         try {
             Questions createdQuestion = questionsService.createQuestion(question);
             return Response.success("创建问题成功", createdQuestion);
+        } catch (Exception e) {
+            return Response.error(500, e.getMessage());
+        }
+    }
+
+    //查询最新问题接口
+    @GetMapping("/getNewQuestions")
+    public Response getNewQuestions() {
+        try {
+            return Response.success("查询最新问题成功", questionsService.getNewQuestions());
         } catch (Exception e) {
             return Response.error(500, e.getMessage());
         }

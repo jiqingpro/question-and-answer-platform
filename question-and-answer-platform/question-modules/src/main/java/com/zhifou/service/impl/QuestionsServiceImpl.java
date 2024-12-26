@@ -1,5 +1,6 @@
 package com.zhifou.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zhifou.common.AppHttpCodeEnum;
 import com.zhifou.entity.Questions;
 import com.zhifou.exception.SystemException;
@@ -7,6 +8,8 @@ import com.zhifou.mapper.QuestionsMapper;
 import com.zhifou.service.QuestionsServise;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author Xzj
@@ -33,5 +36,13 @@ public class QuestionsServiceImpl implements QuestionsServise {
             throw new SystemException(AppHttpCodeEnum.SYSTEM_ERROR);
         }
         return question;
+    }
+
+    @Override
+    public List<Questions> getNewQuestions() {
+        QueryWrapper<Questions> queryWrapper = new QueryWrapper<>();
+        // 按照创建时间降序排列，查询最新的问题
+        queryWrapper.orderByDesc("created_at");
+        return questionsMapper.selectList(queryWrapper);
     }
 }
